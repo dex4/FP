@@ -58,6 +58,6 @@ class TestStudent(unittest.TestCase):
         self.s1.addAssignment("A1")
         self.assertTrue(self.s1.has_assignment("A1"))
         self.assertFalse(self.s1.has_assignment("A2"))
-        
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,7 +1,6 @@
 import sys
 sys.path.append("../")
 from Domain.student import *
-from Repositories.Exception import *
 import datetime
 import unittest
 
@@ -77,6 +76,7 @@ class StudentRepo:
                     if(self._studentList[i]._assignments[j] == aID):
                         del self._studentList[i]._assignments[j]
                         break
+
 class TestStudentRepo(unittest.TestCase):
     def setUp(self):
         self.sRepo = StudentRepo()
@@ -139,5 +139,6 @@ class TestStudentRepo(unittest.TestCase):
         self.sRepo.delete_group_assignment("912", "A2")
         self.assertEqual(self.sRepo.get_assignments(12), ["A1"])
         self.assertEqual(self.sRepo.get_assignments(13), [])
+
 if __name__ == "__main__":
     unittest.main()
