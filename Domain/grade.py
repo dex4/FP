@@ -8,7 +8,7 @@ class Grade:
         self._grade = float(grd)
         self._date = inDate
     def __eq__(self, g):
-        if(self._sID == g._sID and self._aID == g._aID and self.grade == g.grade and self._date == g._date):
+        if(self._sID == g._sID and self._aID == g._aID and self._grade == g._grade and self._date == g._date):
             return True
         return False
     def get_grade(self):
