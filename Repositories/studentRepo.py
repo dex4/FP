@@ -1,6 +1,7 @@
 import sys
 sys.path.append("../")
 from Domain.student import *
+from Repositories.assignmentRepo import *
 import datetime
 import unittest
 
