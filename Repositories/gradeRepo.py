@@ -91,19 +91,52 @@ class GradeRepository:
                     lst[i] = lst[j]
                     lst[j] = aux
         return lst
-    def students_by_average(self, studentRepo):
-        lst = self.get_grade_list()
+    def students_by_average(self, studentRepo, aID):
+        lst = []
         sRepo = studentRepo
         sList = sRepo.get_student_list()
-        for i in range(0, len(sList)):
-            sList[i] = (sList[i], self.get_student_average(sList[i].getID()))
+        newList = []
+        for student in sList:
+            if(aID in student.getAssignmentList()):
+                lst.append(student)
+        for student in lst:
+            avg = self.get_student_average(student.getID())
+            if(avg != 0):
+                newList.append((student, avg))
         for i in range(0, len(sList)-1):
-            for j in range(i+1, len(sList)):
-                if(sList[i][1] < sList[j][1]):
-                    aux = sList[i]
-                    sList[i] = sList[j]
-                    sList[j] = aux
-        return sList
+            for j in range(i+1, len(newList)):
+                if(newList[i][1] < newList[j][1]):
+                    aux = newList[i]
+                    newList[i] = newList[j]
+                    newList[j] = aux
+        return newList
+    def student_alphabetical(self, studentRepo, aID):
+        lst = []
+        sRepo = studentRepo
+        sList = sRepo.get_student_list()
+        newList = []
+        for student in sList:
+            if(aID in student.getAssignmentList()):
+                lst.append(student)
+        for student in lst:
+            avg = self.get_student_average(student.getID())
+            if(avg != 0):
+                newList.append((student, avg))
+        for i in range(0, len(newList)-1):
+            for j in range(i+1, len(newList)):
+                if(newList[i][0].getName() > newList[j][0].getName()):
+                    aux = newList[i]
+                    newList[i] = newList[j]
+                    newList[j] = aux
+        return newList
+    def isLate(self, student):
+        lst = student.getAssignmentList()
+        sID = student.getID()
+        for asgn in lst:
+            if(not self.isGraded(sID, asgn)):
+                return True
+        print("LATE!")
+        return False
     def get_late_students(self, sList):
         lst = self.get_grade_list()
         lateList = []
@@ -111,8 +144,37 @@ class GradeRepository:
             student = sList[i]
             assignments = sList[i].getAssignmentList()
             for j in range(0 ,len(assignments)):
-                if(not self.isGraded(student.getID(), assignments[j])):
-                    lateList.append(student, assignments[j])
+                if((not self.isGraded(student.getID(), assignments[j])) and self.isLate(student)):
+                    lateList.append((student, assignments[j]))
+        return lateList
+    def sort_students_by_grade(self, studentRepo):
+        sRepo = studentRepo
+        sList = sRepo.get_student_list()
+        newList = []
+        for student in sList:
+            avg = self.get_student_average(student.getID())
+            newList.append((student, avg))
+        for i in range(0, len(newList)-1):
+            for j in range(i+1, len(newList)):
+                if(newList[i][1] < newList[j][1]):
+                    aux = newList[i]
+                    newList[i] = newList[j]
+                    newList[j] = aux
+        return newList
+    def sort_assignments_by_average(self, asgnRepo):
+        aRepo = asgnRepo
+        aList = aRepo.getAssignmentList()
+        newList = []
+        for assignment in aList:
+            avg = self.get_assignment_average(assignment.getID())
+            newList.append((assignment, avg))
+        for i in range(0, len(newList)-1):
+            for j in range(i+1, len(newList)):
+                if(newList[i][1] < newList[j][1]):
+                    aux = newList[i]
+                    newList[i] = newList[j]
+                    newList[j] = aux
+        return newList
 class TestGrade(unittest.TestCase):
     def setUp(self):
         self.gRepo = GradeRepository()

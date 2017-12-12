@@ -5,12 +5,14 @@ from Repositories.assignmentRepo import *
 class AssignmentController:
     def __init__(self):
         self._aRepo = AssignmentRepo()
+    def getRepo(self):
+        return self._aRepo
     def addA(self, asgn):
         self._aRepo.store(asgn)
     def returnAssignmentList(self):
         return self._aRepo.getAssignmentList()
-    def returnAssignment(self):
-        return self._aRepo.getAssignment()
+    def returnAssignment(self, aID):
+        return self._aRepo.getAssignment(aID)
     def deleteAssignment(self, aID):
         self._aRepo.remove_assignment(aID)
     def updateAssignment(self, aID, newDesc, newDln):

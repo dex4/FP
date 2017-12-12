@@ -29,5 +29,13 @@ class GradeController:
         return self._gRepo.isGraded(sID, aID)
     def getGradedAssignments(self, asgnList):
         return self._gRepo.gradedAssignments(asgnList)
-    def getStudentAvg(self, sRepo):
-        return self._gRepo.students_by_average(sRepo)
+    def getStudentAvg(self, sRepo, aID):
+        return self._gRepo.students_by_average(sRepo, aID)
+    def getStudentAlpha(self, sRepo, aID):
+        return self._gRepo.student_alphabetical(sRepo, aID)
+    def returnLateStudents(self, sList):
+        return self._gRepo.get_late_students(sList)
+    def returnGradeStatistic(self, sRepo):
+        return self._gRepo.sort_students_by_grade(sRepo)
+    def returnAssignmentGradeStatistic(self, aRepo):
+        return self._gRepo.sort_assignments_by_average(aRepo)
