@@ -32,3 +32,5 @@ class StudentController:
         self._sRepo.delete_student_assignment(sID, aID)
     def deleteGroupAssignment(self, group, aID):
         self._sRepo.delete_group_assignment(group, aID)
+    def getStudentsWithAssignment(self, aID):
+        return self._sRepo.students_with_assignment(aID)

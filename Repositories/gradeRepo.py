@@ -19,6 +19,20 @@ class GradeRepository:
         for grade in lst:
             if(grade.get_student() == sID and grade.get_assignment() == aID):
                 return grade._grade
+    def get_student_grades(self, sID):
+        lst = self._gList
+        gL = []
+        for grade in lst:
+            if(grade.get_student() == sID):
+                gL.append(grade)
+        return gL
+    def get_assignment_grades(self, aID):
+        lst = self._gList
+        gL = []
+        for grade in lst:
+            if(grade.get_assignment() == aID):
+                gL.append(grade)
+        return gL
     def get_student_average(self, sID):
         total = 0
         avg = 0
@@ -223,8 +237,10 @@ class TestGrade(unittest.TestCase):
         s2 = Student(13, "Andrei", "912")
         sRepo.store(s1)
         sRepo.store(s2)
-        lst = self.gRepo.students_by_average(sRepo)
-        self.assertEqual(lst, [(s1, 9.0), (s2, 8.0)])
+        lst = self.gRepo.students_by_average(sRepo, "A1")
+        self.assertEqual(lst, [])
+    def test_getSG(self):
+        self.assertEqual(self.gRepo.get_student_grades(12), [self.g1, self.g2])
 
 if __name__ == "__main__":
     unittest.main()

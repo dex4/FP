@@ -39,3 +39,7 @@ class GradeController:
         return self._gRepo.sort_students_by_grade(sRepo)
     def returnAssignmentGradeStatistic(self, aRepo):
         return self._gRepo.sort_assignments_by_average(aRepo)
+    def returnStudentGrading(self, sID):
+        return self._gRepo.get_student_grades(sID)
+    def returnAssignmentGrading(self, aID):
+        return self._gRepo.get_assignment_grades(aID)

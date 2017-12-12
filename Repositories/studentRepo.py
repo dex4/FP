@@ -77,7 +77,13 @@ class StudentRepo:
                     if(self._studentList[i]._assignments[j] == aID):
                         del self._studentList[i]._assignments[j]
                         break
-
+    def students_with_assignment(self, aID):
+        lst = self._studentList
+        sLst = []
+        for student in lst:
+            if(aID in student.getAssignmentList()):
+                sLst.append(student)
+        return sLst
 class TestStudentRepo(unittest.TestCase):
     def setUp(self):
         self.sRepo = StudentRepo()
