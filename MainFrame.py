@@ -45,8 +45,8 @@ class MainFrame:
                 sGroup = input("Group: ")
                 if(valid == True):
                     s = Student(sID, sName, sGroup)
-                    self.undo.pushToStack("addS", s.getID())
                     self.sC.addS(s)
+                    self.undo.pushToStack("addS", s.getID())
             elif(what == "A"):
                 aID = input("Assignment ID: ")
                 aDesc = input("Assignment description: ")
@@ -83,7 +83,7 @@ class MainFrame:
                 newName = input("New name: ")
                 newGroup = input("New group: ")
                 student = self.sC.findStudent(sID)
-                self.undo.pushToStack("updateS", (student.getID(), student.getName(), student.getGroup()))
+                self.undo.pushToStack("updateS", ((student.getID(), student.getName(), student.getGroup()), (sID, newName, newGroup)))
                 self.sC.updateStudent(sID, newName, newGroup)
             else:
                 aID = input("Assignment ID: ")
@@ -92,7 +92,7 @@ class MainFrame:
                 y, m, d = map(int, dln.split("-"))
                 newDeadline = datetime.date(y, m, d)
                 assignment = self.aC.returnAssignment(aID)
-                self.undo.pushToStack("updateA", (assignment.getID(), assignment.getDescription(), assignment.get_deadline()))
+                self.undo.pushToStack("updateA", ((assignment.getID(), assignment.getDescription(), assignment.get_deadline()), (aID, newDesc, newDeadline)))
                 self.aC.updateAssignment(aID, newDesc, newDeadline)
         elif(op == "4"):
             what = input("Type S to list students or A for assignments.\n")
@@ -147,7 +147,10 @@ class MainFrame:
             for asgn in lst:
                 print(asgn[0].getID(), asgn[0].getDescription(), asgn[1])
         elif(op == "undo"):
-            self.undo.mainFrame()
+            self.undo.UndoFrame()
+        elif(op == "redo"):
+            self.undo.RedoFrame()
+
 main = MainFrame()
 display = Display()
 op = "a"

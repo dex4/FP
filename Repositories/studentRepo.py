@@ -53,7 +53,7 @@ class StudentRepo:
         for i in range(0, len(lst)):
             if(lst[i].getID() == ID):
                 return lst[i]
-            return None
+        return None
     def update_Student(self, ID, newName, newGroup):
         lst = self._studentList
         for i in range(0, len(lst)):
