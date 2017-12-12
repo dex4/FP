@@ -29,3 +29,5 @@ class GradeController:
         return self._gRepo.isGraded(sID, aID)
     def getGradedAssignments(self, asgnList):
         return self._gRepo.gradedAssignments(asgnList)
+    def getStudentAvg(self, sRepo):
+        return self._gRepo.students_by_average(sRepo)

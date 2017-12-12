@@ -6,6 +6,8 @@ import unittest
 class StudentController:
     def __init__(self):
         self._sRepo = StudentRepo()
+    def returnRepo(self):
+        return self._sRepo
     def addS(self, student):
         self._sRepo.store(student)
     def returnStudentList(self):

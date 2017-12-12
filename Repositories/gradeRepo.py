@@ -2,6 +2,8 @@ import sys
 sys.path.append('..')
 from Domain.grade import *
 from Domain.assignment import *
+from Domain.student import *
+from Repositories.studentRepo import *
 import datetime
 import unittest
 
@@ -21,11 +23,12 @@ class GradeRepository:
         total = 0
         avg = 0
         nr = 0
-        for grade in self._gList:
-            if(grade.get_student() == sID):
-                total += grade.get_grade()
-                nr += 1
-        avg = total/nr
+        if(self.isStudent(sID)):
+            for grade in self._gList:
+                if(grade.get_student() == sID):
+                    total += grade.get_grade()
+                    nr += 1
+            avg = total/nr
         return avg
     def get_assignment_average(self, aID):
         total = 0
@@ -88,7 +91,28 @@ class GradeRepository:
                     lst[i] = lst[j]
                     lst[j] = aux
         return lst
-
+    def students_by_average(self, studentRepo):
+        lst = self.get_grade_list()
+        sRepo = studentRepo
+        sList = sRepo.get_student_list()
+        for i in range(0, len(sList)):
+            sList[i] = (sList[i], self.get_student_average(sList[i].getID()))
+        for i in range(0, len(sList)-1):
+            for j in range(i+1, len(sList)):
+                if(sList[i][1] < sList[j][1]):
+                    aux = sList[i]
+                    sList[i] = sList[j]
+                    sList[j] = aux
+        return sList
+    def get_late_students(self, sList):
+        lst = self.get_grade_list()
+        lateList = []
+        for i in range(0, len(sList)):
+            student = sList[i]
+            assignments = sList[i].getAssignmentList()
+            for j in range(0 ,len(assignments)):
+                if(not self.isGraded(student.getID(), assignments[j])):
+                    lateList.append(student, assignments[j])
 class TestGrade(unittest.TestCase):
     def setUp(self):
         self.gRepo = GradeRepository()
@@ -131,6 +155,14 @@ class TestGrade(unittest.TestCase):
         a1 = Assignment("A1", "Lorem", datetime.date(2017, 12, 1))
         a2 = Assignment("A2", "Ipsum", datetime.date(2017, 11, 12))
         self.assertEqual(self.gRepo.gradedAssignments([a1, a2]), [("A1", 9), ("A2", 8)])
-        
+    def test_sortAvg(self):
+        sRepo = StudentRepo()
+        s1 = Student(12, "Darjan", "912")
+        s2 = Student(13, "Andrei", "912")
+        sRepo.store(s1)
+        sRepo.store(s2)
+        lst = self.gRepo.students_by_average(sRepo)
+        self.assertEqual(lst, [(s1, 9.0), (s2, 8.0)])
+
 if __name__ == "__main__":
     unittest.main()
