@@ -5,7 +5,7 @@ from Controller.gradeController import *
 from Controller.studentController import *
 from Controller.statisticsController import *
 from display import *
-
+import datetime
 class MainFrame:
     def __init__(self):
         self.sC = StudentController()
@@ -66,7 +66,7 @@ class MainFrame:
                 for student in self.sC.returnStudentList():
                     self.sC.deleteStudentAssignment(student.getID(), aID)
         elif(op == "2"):
-            what = input("Type S to delete a student or A to add an assignment.\n")
+            what = input("Type S to delete a student or A to delete an assignment.\n")
             valid = True
             if(what == "S"):
                 sID = int(input("Student ID: "))
@@ -81,18 +81,54 @@ class MainFrame:
                 newDeadline = datetime.date(y, m, d)
                 self.aC.updateAssignment(aID, newDesc, newDeadline)
         elif(op == "4"):#provisionary
-            what = input("Type S to delete a student or A to add an assignment.\n")
+            what = input("Type S to list students or A for assignments.\n")
             if(what == "S"):
                 for student in self.sC.returnStudentList():
                     print(student.getID(), student.getName(), student.getGroup())
-                    for asgn in student.getAssignmentList():
-                        print(asgn)
+                    print(student.getAssignmentList())
             else:
                 for asgn in self.aC.returnAssignmentList():
                     print(asgn.getID(), asgn.getDescription(), asgn.get_deadline())
-    def sList(self):
-        return self.sC.returnStudentList()
-
+        elif(op == "5"):
+            aID = input("Give assignment ID: ")
+            sID = int(input("Give student ID: "))
+            self.sC.assign_for_student(sID, aID)
+        elif(op == "6"):
+            aID = input("Give assignment ID: ")
+            group = input("Give group number: ")
+            self.sC.assign_for_group(group, aID)
+        elif(op == "7"):
+            aID = input("Assignment ID: ")
+            sID = int(input("Student ID: "))
+            grade = float(input("Grade: "))
+            turnIn = datetime.datetime.now().date()
+            g = Grade(sID, aID, grade, turnIn)
+            self.gC.addG(g)
+        elif(op == "8"):
+            lst = self.gC.returnGradeList()
+            for g in lst:
+                print(g.get_student(), g.get_assignment(), g.get_grade())
+        elif(op == "9"):
+            aID = input("Assignment ID: ")
+            how = input("Type 'avg' to be sorted by average and 'alpha' to be sorded aplhabetical: ")
+            if(how == "avg"):
+                lst = self.stats.returnStortedStudentsByAvg(aID)
+            else:
+                lst = self.stats.returnStortedStudentsAlpha(aID)
+            for stud in lst:
+                print(stud[0].getID(), stud[0].getName(), stud[1])
+        elif(op == "10"):
+            lst = self.stats.getLateStudents()
+            for stud in lst:
+                print(stud[0].getID(), stud[0].getName(), stud[1])
+        elif(op == "11"):
+            lst = self.stats.bestGrades()
+            for stud in lst:
+                print(stud[0].getID(), stud[0].getName(), stud[1])
+        elif(op == "12"):
+            lst = self.stats.assignmentsByAverage()
+            for asgn in lst:
+                print(asgn[0].getID(), asgn[0].getDescription(), asgn[1])
 main = MainFrame()
 display = Display()
 op = "a"
