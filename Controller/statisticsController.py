@@ -5,7 +5,7 @@ from Controller.gradeController import *
 from Controller.studentController import *
 
 class Statistics:
-    def __init__(self, sC, gC, aC):
+    def __init__(self, sC, aC, gC):
         self.sController = sC
         self.gController = gC
         self.aController = aC
@@ -21,6 +21,7 @@ class Statistics:
     def assignmentsByAverage(self):
         return self.gController.returnAssignmentGradeStatistic(self.aController.getRepo())
 
+"""
 gC = GradeController()
 
 g1 = Grade(12, "A1", 10, datetime.date(2017, 12, 1))
@@ -49,3 +50,4 @@ sC.assign_for_student(14, "A1")
 lst = stats.assignmentsByAverage()
 for stud in lst:
     print(stud[0].getID(), stud[1])
+"""
