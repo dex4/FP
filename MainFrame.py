@@ -40,60 +40,68 @@ class MainFrame:
             what = input("Type S to add a student or A to add an assignment.\n")
             valid = True
             if(what == "S"):
-                sID = int(input("Student ID: "))
-                sName = input("Name: ")
-                sGroup = input("Group: ")
-                if(valid == True):
+                params = display.getAddStudent()
+                if(params != False):
+                    sID = params[0]
+                    sName = params[1]
+                    sGroup = params[2]
                     s = Student(sID, sName, sGroup)
                     self.sC.addS(s)
                     self.undo.pushToStack("addS", s.getID())
             elif(what == "A"):
-                aID = input("Assignment ID: ")
-                aDesc = input("Assignment description: ")
-                aDln = input("Enter deadline, using the YYYY-MM-DD format: ")
-                y, m, d = map(int, aDln.split("-"))
-                dln = datetime.date(y, m, d)
-                if(valid==True):
-                    a = Assignment(aID, aDesc, dln)
+                params = display.getAddAssignment()
+                if(params != False):
+                    aID = params[0]
+                    aDesc = params[1]
+                    aDln = params[2]
+                    a = Assignment(aID, aDesc, aDln)
                     self.undo.pushToStack("addA", a.getID())
                     self.aC.addA(a)
         elif(op == "3"):
             what = input("Type S to delete a student or A to delete an assignment.\n")
             valid = True
             if(what == "S"):
-                sID = int(input("Student ID: "))
-                gradeList = self.gC.returnStudentGrading(sID)
-                self.undo.pushToStack("deleteS", (gradeList, self.sC.findStudent(sID)))
-                self.sC.removeStudent(sID)
-                self.gC.deleteStudentGrading(sID)
+                params = display.getRemoveStudent()
+                if(params != False):
+                    sID = params
+                    gradeList = self.gC.returnStudentGrading(sID)
+                    self.undo.pushToStack("deleteS", (gradeList, self.sC.findStudent(sID)))
+                    self.sC.removeStudent(sID)
+                    self.gC.deleteStudentGrading(sID)
             else:
-                aID = input("Assignment ID: ")
-                gradeList = self.gC.returnAssignmentGrading(aID)
-                sList = self.sC.getStudentsWithAssignment(aID)
-                self.undo.pushToStack("deleteA", (gradeList, self.aC.returnAssignment(aID), sList))
-                self.aC.deleteAssignment(aID)
-                self.gC.deleteAssignmentGrading(aID)
-                for student in self.sC.returnStudentList():
-                    self.sC.deleteStudentAssignment(student.getID(), aID)
+                params = display.getRemoveAssignment()
+                if(params != False):
+                    aID = params
+                    gradeList = self.gC.returnAssignmentGrading(aID)
+                    sList = self.sC.getStudentsWithAssignment(aID)
+                    self.undo.pushToStack("deleteA", (gradeList, self.aC.returnAssignment(aID), sList))
+                    self.aC.deleteAssignment(aID)
+                    self.gC.deleteAssignmentGrading(aID)
+                    for student in self.sC.returnStudentList():
+                        self.sC.deleteStudentAssignment(student.getID(), aID)
         elif(op == "2"):
             what = input("Type S to update a student or A to update an assignment.\n")
             valid = True
             if(what == "S"):
-                sID = int(input("Student ID: "))
-                newName = input("New name: ")
-                newGroup = input("New group: ")
-                student = self.sC.findStudent(sID)
-                self.undo.pushToStack("updateS", ((student.getID(), student.getName(), student.getGroup()), (sID, newName, newGroup)))
-                self.sC.updateStudent(sID, newName, newGroup)
+                params = display.getUpdateStudent()
+                if(params != False):
+                    sID = params[0]
+                    newName = params[1]
+                    newGroup = params[2]
+                    student = self.sC.findStudent(sID)
+                    self.undo.pushToStack("updateS", ((student.getID(), student.getName(), student.getGroup()), (sID, newName, newGroup)))
+                    self.sC.updateStudent(sID, newName, newGroup)
             else:
-                aID = input("Assignment ID: ")
-                newDesc = input("New description: ")
-                dln = input("Enter deadline, using the YYYY-MM-DD format: ")
-                y, m, d = map(int, dln.split("-"))
-                newDeadline = datetime.date(y, m, d)
-                assignment = self.aC.returnAssignment(aID)
-                self.undo.pushToStack("updateA", ((assignment.getID(), assignment.getDescription(), assignment.get_deadline()), (aID, newDesc, newDeadline)))
-                self.aC.updateAssignment(aID, newDesc, newDeadline)
+                params = display.getUpdateAssignment()
+                if(params != False):
+                    aID = params[0]
+                    newDesc = params[1]
+                    dln = params[2]
+                    y, m, d = map(int, dln.split("-"))
+                    newDeadline = datetime.date(y, m, d)
+                    assignment = self.aC.returnAssignment(aID)
+                    self.undo.pushToStack("updateA", ((assignment.getID(), assignment.getDescription(), assignment.get_deadline()), (aID, newDesc, newDeadline)))
+                    self.aC.updateAssignment(aID, newDesc, newDeadline)
         elif(op == "4"):
             what = input("Type S to list students or A for assignments.\n")
             if(what == "S"):
@@ -104,10 +112,12 @@ class MainFrame:
                 for asgn in self.aC.returnAssignmentList():
                     print(asgn.getID(), asgn.getDescription(), asgn.get_deadline())
         elif(op == "5"):
-            aID = input("Give assignment ID: ")
-            sID = int(input("Give student ID: "))
-            self.undo.pushToStack("ATS", (sID, aID))
-            self.sC.assign_for_student(sID, aID)
+            params = display.assignToStudent()
+            if(params != False):
+                aID = params[1]
+                sID = int(params[0])
+                self.undo.pushToStack("ATS", (sID, aID))
+                self.sC.assign_for_student(sID, aID)
         elif(op == "6"):
             aID = input("Give assignment ID: ")
             group = input("Give group number: ")
@@ -152,9 +162,9 @@ class MainFrame:
             self.undo.RedoFrame()
 
 main = MainFrame()
-display = Display()
+display = Display(main.sC, main.aC, main.gC)
 op = "a"
 print(display.printMainMenu())
 while(op != "0"):
-    op = input("Give option: ")
+    op = display.getInput()
     main.workFrame(op)

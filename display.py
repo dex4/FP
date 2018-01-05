@@ -3,7 +3,12 @@ sys.path.append('../')
 import datetime
 from Repositories.Exception import *
 from Repositories.studentRepo import *
+
 class Display:
+    def __init__(self, sController, aController, gController):
+        self.sC = sController
+        self.aC = aController
+        self.gC = gController
     def printMainMenu(self):
         s = "1.Add student/assignment.\n2.Update student/assignment.\n3.Remove student/assignment.(REQ: undo)\n4.List students/assignments.\n"
         s += "5.Give assignment to a student.\n6.Give assignment to a group of students."
@@ -15,6 +20,8 @@ class Display:
 
     def getInput(self):
         op = input("Pick option: ")
+        if(op == "undo" or op == "redo"):
+            return op
         try:
             int(op)
         except ValueError:
@@ -22,8 +29,8 @@ class Display:
             return
         try:
             if(int(op) < 0 or int(op) > 14):
-                raise RepositoryException("Option should be a number from 1 to 12.")
-        except RepositoryException as e:
+                raise EntryException("Option should be a number from 1 to 12.")
+        except EntryException as e:
             print(e)
             return
         return op
@@ -31,45 +38,117 @@ class Display:
     def getAddStudent(self):
         print("Give the student's details:")
         ID = input("ID: ")
+        print(self.sC.returnStudentList())
+        try:
+            int(ID)
+        except ValueError:
+            print("ID should be an integer number")
+            return False
+        try:
+            if(self.sC.findForValidation(int(ID)) != Student(1, "n", "n")):
+                raise EntryException("Student ID already exists!")
+        except EntryException as e:
+            print(e)
+            return False
         name = input("Name: ")
         group = input("Group: ")
-        return (ID, name, group)
+        return (int(ID), name, group)
 
     def getUpdateStudent(self):
         ID = input("ID: ")
+        try:
+            int(ID)
+        except ValueError:
+            print("ID should be an integer number")
+            return False
+        try:
+            if(self.sC.findForValidation(int(ID)) == Student(1, "n", "n")):
+                raise EntryException("Student ID doesn't exist!")
+        except EntryException as e:
+            print(e)
+            return False
         name = input("New name: ")
         group = input("New group (type 0 to leave unchanged): ")
-        return (ID, name, group)
+        return (int(ID), name, group)
 
     def getRemoveStudent(self):
         ID = input("Give the ID of the student you want removed: ")
-        return ID
+        try:
+            int(ID)
+        except ValueError:
+            print("ID should be an integer number")
+            return False
+        try:
+            if(self.sC.findForValidation(int(ID)) == Student(1, "n", "n")):
+                raise EntryException("Student ID doesn't exist!")
+        except EntryException as e:
+            print(e)
+            return False
+        return int(ID)
     #<---Assignments--->
 
     def getAddAssignment(self):
         print("Give the assignment's details:")
         ID = input("ID: ")
+        try:
+            if(self.aC.findForValidation(ID) != Assignment("!", "!", "!")):
+                raise EntryException("Assignment ID already exists!")
+        except EntryException as e:
+            print(e)
+            return False
         desc = input("Description: ")
         date_entry = input("Enter deadline, using the YYYY-MM-DD format: ")
+        try:
+            vy = date_entry[0:3]
+            vm = date_entry[5:6]
+            vd = date_entry[8:9]
+            int(vy)
+            int(vm)
+            int(vd)
+        except ValueError:
+            print("Invalid date. Try again.")
+            return False
         y, m, d = map(int, date_entry.split("-"))
         dln = datetime.date(y, m, d)
         return (ID, desc, dln)
 
     def getUpdateAssignment(self):
         ID = input("ID: ")
+        try:
+            if(self.aC.findForValidation(ID) == Assignment("!", "!", "!")):
+                raise EntryException("Assignment ID doesn't exist!")
+        except EntryException as e:
+            print(e)
+            return False
         desc = input("New description: ")
-        deadline = input("New deadline: ")
-        return (ID, desc, deadline)
+        date_entry = input("New deadline: ")
+        try:
+            vy = date_entry[0:3]
+            vm = date_entry[5:6]
+            vd = date_entry[8:9]
+            int(vy)
+            int(vm)
+            int(vd)
+        except ValueError:
+            print("Invalid date. Try again.")
+            return False
+        return (ID, desc, date_entry)
 
     def getRemoveAssignment(self):
         ID = input("Give the ID of the assignment you want removed: ")
+        try:
+            if(self.aC.findForValidation(ID) == Assignment("!", "!", "!")):
+                raise EntryException("Assignment ID doesn't exist!")
+        except EntryException as e:
+            print(e)
+            return False
         return ID
 
     #<---Giving an assignment --->
     def assignToStudent(self):
         aID = input("Assignment's ID: ")
         sID = input("Student's ID you want it assigned to: ")
-        return (sID, aID)
+        return (int(sID), aID)
 
     def assignToGroup(self):
         aID = input("Assignment's ID: ")
@@ -78,8 +157,36 @@ class Display:
     #<--- Grading --->
     def getGrading(self):
         sID = input("Student's ID: ")
+        try:
+            int(sID)
+        except ValueError:
+            print("ID should be an integer number")
+            return False
+        try:
+            if(self.sC.findForValidation(int(sID)) == Student(1, "n", "n")):
+                raise EntryException("Student ID doesn't exist!")
+        except EntryException as e:
+            print(e)
+            return False
         aID = input("Assignment's ID: ")
+        try:
+            if(self.aC.findForValidation(ID) == Assignment("!", "!", "!")):
+                raise EntryException("Assignment ID doesn't exist!")
+        except EntryException as e:
+            print(e)
+            return False
         grade = input("Grade: ")
+        try:
+            float(grade)
+        except ValueError:
+            print("The grade should be a real number!")
+            return False
+        try:
+            if(grade < 0 or grade > 10):
+                raise EntryException("Grade should be a number between 1 and 10.")
+        except EntryException as e:
+            print(e)
+            return False
         turnin = self.getTurnInDate()
         return (sID, aID, grade, turnin)
 

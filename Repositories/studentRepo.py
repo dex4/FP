@@ -84,6 +84,12 @@ class StudentRepo:
             if(aID in student.getAssignmentList()):
                 sLst.append(student)
         return sLst
+    def find_for_validation(self, sID):
+        lst = self._studentList
+        for i in range(0, len(lst)):
+            if(lst[i].getID() == sID):
+                return lst[i]
+        return Student(1, "n", "n")
 class TestStudentRepo(unittest.TestCase):
     def setUp(self):
         self.sRepo = StudentRepo()

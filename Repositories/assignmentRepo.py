@@ -30,6 +30,11 @@ class AssignmentRepo:
                 self._aList[i]._description = newDesc
                 self._aList[i]._deadline = newDln
                 break
+    def find_for_validation(self, aID):
+        for asgn in self._aList:
+            if(asgn.getID() == aID):
+                return asgn
+        return Assignment("!", "!", "!")
 
 class TestAssignmentRepo(unittest.TestCase):
     def setUp(self):

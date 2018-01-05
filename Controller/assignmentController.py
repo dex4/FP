@@ -17,3 +17,5 @@ class AssignmentController:
         self._aRepo.remove_assignment(aID)
     def updateAssignment(self, aID, newDesc, newDln):
         self._aRepo.update_assignment(aID, newDesc, newDln)
+    def findForValidation(self, aID):
+        return self._aRepo.find_for_validation(aID)
