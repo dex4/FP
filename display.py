@@ -10,12 +10,12 @@ class Display:
         self.aC = aController
         self.gC = gController
     def printMainMenu(self):
-        s = "1.Add student/assignment.\n2.Update student/assignment.\n3.Remove student/assignment.(REQ: undo)\n4.List students/assignments.\n"
+        s = "1.Add student/assignment.\n2.Update student/assignment.\n3.Remove student/assignment.\n4.List students/assignments.\n"
         s += "5.Give assignment to a student.\n6.Give assignment to a group of students."
         s += "\n7.Grade a student.(REQ: validation)\n8.List grades.\n"
         s += "\nSTATISTICS OPTIONS:\n"
         s += "\n9.List students who recieved a given assignment.\n10.Late in turning in at least an assignment.\n11.List students sorted by school situation.\n12.List assignments with at least one grade."
-        s += "\n13. Undo.\n14.Redo (TBI)\n"
+        s += "\n13.Undo.\n14.Redo\n0.Exit\n"
         return s
 
     def getInput(self):
@@ -168,10 +168,17 @@ class Display:
         except EntryException as e:
             print(e)
             return False
+        sID = int(sID)
         aID = input("Assignment's ID: ")
         try:
-            if(self.aC.findForValidation(ID) == Assignment("!", "!", "!")):
+            if(self.aC.findForValidation(aID) == Assignment("!", "!", "!")):
                 raise EntryException("Assignment ID doesn't exist!")
+        except EntryException as e:
+            print(e)
+            return False
+        try:
+            if(self.gC.is_graded(sID, aID) == True):
+                raise EntryException("Assignment is already graded.")
         except EntryException as e:
             print(e)
             return False
@@ -182,6 +189,7 @@ class Display:
             print("The grade should be a real number!")
             return False
         try:
+            grade = float(grade)
             if(grade < 0 or grade > 10):
                 raise EntryException("Grade should be a number between 1 and 10.")
         except EntryException as e:

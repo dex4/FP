@@ -76,7 +76,7 @@ class Undo:
         aID = params[1]
         self.gC.deleteSpecificGrade(sID, aID)
         self.popOutOfStack()
-        self.pushToRedo("grading", params, params)
+        self.pushToRedo("grade", params, params)
     def redoAddS(self, params):
         self.sC.addS(params)
         self.pushToStack("addS", params.getID())
@@ -118,6 +118,11 @@ class Undo:
         self.sC.assign_for_group(group, aID)
         self.popRedo()
         self.pushToStack("ATG", params)
+    def redoGrading(self, params):
+        grade = Grade(params[0], params[1], params[2], params[3])
+        self.gC.addG(grade)
+        self.popRedo()
+        self.pushToStack("grade", params)
     def UndoFrame(self):
         l = len(self.list)
         lst = self.list
@@ -169,3 +174,5 @@ class Undo:
                 self.redoAssignToStudent(params)
             elif(cmd == "ATG"):
                 self.redoAssignToGroup(params)
+            elif(cmd == "grade"):
+                self.redoGrading(params)

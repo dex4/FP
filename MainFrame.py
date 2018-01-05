@@ -81,7 +81,6 @@ class MainFrame:
                         self.sC.deleteStudentAssignment(student.getID(), aID)
         elif(op == "2"):
             what = input("Type S to update a student or A to update an assignment.\n")
-            valid = True
             if(what == "S"):
                 params = display.getUpdateStudent()
                 if(params != False):
@@ -119,18 +118,21 @@ class MainFrame:
                 self.undo.pushToStack("ATS", (sID, aID))
                 self.sC.assign_for_student(sID, aID)
         elif(op == "6"):
-            aID = input("Give assignment ID: ")
-            group = input("Give group number: ")
+            params = display.assignToGroup()
+            aID = params[1]
+            group = params[0]
             self.undo.pushToStack("ATG", (group, aID))
             self.sC.assign_for_group(group, aID)
         elif(op == "7"):
-            aID = input("Assignment ID: ")
-            sID = int(input("Student ID: "))
-            grade = float(input("Grade: "))
-            turnIn = datetime.datetime.now().date()
-            g = Grade(sID, aID, grade, turnIn)
-            self.undo.pushToStack("grade", (g.get_student(), g.get_assignment()))
-            self.gC.addG(g)
+            params = display.getGrading()
+            if(params != False):
+                aID = params[1]
+                sID = params[0]
+                grade = params[2]
+                turnIn = params[3]
+                g = Grade(sID, aID, grade, turnIn)
+                self.undo.pushToStack("grade", (g.get_student(), g.get_assignment(), g.get_grade(), g.get_turnIn()))
+                self.gC.addG(g)
         elif(op == "8"):
             lst = self.gC.returnGradeList()
             for g in lst:

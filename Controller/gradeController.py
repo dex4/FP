@@ -43,3 +43,5 @@ class GradeController:
         return self._gRepo.get_student_grades(sID)
     def returnAssignmentGrading(self, aID):
         return self._gRepo.get_assignment_grades(aID)
+    def is_graded(self, sID, aID):
+        return self._gRepo.isGraded(sID, aID)
