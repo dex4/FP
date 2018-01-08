@@ -147,11 +147,35 @@ class Display:
     #<---Giving an assignment --->
     def assignToStudent(self):
         aID = input("Assignment's ID: ")
+        try:
+            if(self.aC.findForValidation(aID) == Assignment("!", "!", "!")):
+                raise EntryException("Assignment ID doesn't exist!")
+        except EntryException as e:
+            print(e)
+            return False
         sID = input("Student's ID you want it assigned to: ")
+        try:
+            int(sID)
+        except ValueError:
+            print("ID should be an integer number")
+            return False
+        try:
+            if(self.sC.findForValidation(int(sID)) == Student(1, "n", "n")):
+                raise EntryException("Student ID doesn't exist!")
+        except EntryException as e:
+            print(e)
+            return False
         return (int(sID), aID)
 
     def assignToGroup(self):
         aID = input("Assignment's ID: ")
+        try:
+            if(self.aC.findForValidation(aID) == Assignment("!", "!", "!")):
+                raise EntryException("Assignment ID doesn't exist!")
+        except EntryException as e:
+            print(e)
+            return False
+
         group = input("Group number: ")
         return (group, aID)
     #<--- Grading --->
@@ -179,6 +203,13 @@ class Display:
         try:
             if(self.gC.is_graded(sID, aID) == True):
                 raise EntryException("Assignment is already graded.")
+        except EntryException as e:
+            print(e)
+            return False
+        try:
+            lst = self.sC.returnAssignments(sID)
+            if(not aID in lst):
+                raise EntryException("Student does not have this assignment.")
         except EntryException as e:
             print(e)
             return False

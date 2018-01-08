@@ -119,10 +119,11 @@ class MainFrame:
                 self.sC.assign_for_student(sID, aID)
         elif(op == "6"):
             params = display.assignToGroup()
-            aID = params[1]
-            group = params[0]
-            self.undo.pushToStack("ATG", (group, aID))
-            self.sC.assign_for_group(group, aID)
+            if(params != False):
+                aID = params[1]
+                group = params[0]
+                self.undo.pushToStack("ATG", (group, aID))
+                self.sC.assign_for_group(group, aID)
         elif(op == "7"):
             params = display.getGrading()
             if(params != False):
