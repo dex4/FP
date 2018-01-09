@@ -6,6 +6,7 @@ from Controller.studentController import *
 from Controller.statisticsController import *
 from Controller.undo import *
 from TextRepo.TextRepository import *
+from BinaryRepository.BinRepo import *
 from display import *
 import datetime
 
@@ -37,15 +38,20 @@ class MainFrame:
         self.gC = GradeController()
         self.stats = Statistics(self.sC, self.aC, self.gC)
         self.undo = Undo(self.sC, self.aC, self.gC)
+        self.TR = TextRepository(self.sC, self.aC, self.gC)
+        self.BR = BinRepo(self.sC, self.aC, self.gC)
         print("What kind of repository you want to use?\n Type 'memory' for in memory.\n 'text' to save the data in a text file. \ 'bin' to use a binary repository.\n")
         self.repoType = input()
         if(self.repoType == "memory"):
             self.in_memory()
         elif(self.repoType == "text"):
-            TR = TextRepository(self.sC, self.aC, self.gC)
-            self.sC = TR.getStudents()
-            self.aC = TR.getAssignments()
-            self.gC = TR.getGrades()
+            self.sC = self.TR.getStudents()
+            self.aC = self.TR.getAssignments()
+            self.gC = self.TR.getGrades()
+        elif(self.repoType == "bin"):
+            self.sC = self.BR.loadStudents()
+            self.aC = self.BR.loadAssignments()
+            self.gC = self.BR.loadGrades()
     def workFrame(self, op):
         if(op == "1"):
             what = input("Type S to add a student or A to add an assignment.\n")
@@ -176,8 +182,10 @@ class MainFrame:
             self.undo.RedoFrame()
         elif(op == "0"):
             if(self.repoType == "text"):
-                TR.dumpData()
-                
+                self.TR.dumpData()
+            elif(self.repoType == "bin"):
+                self.BR.dumpData(self.sC.returnStudentList(), self.aC.returnAssignmentList(), self.gC.returnGradeList())
+
 
 main = MainFrame()
 display = Display(main.sC, main.aC, main.gC)
