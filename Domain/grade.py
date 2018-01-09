@@ -19,6 +19,9 @@ class Grade:
         return self._sID
     def get_turnIn(self):
         return self._date
+    def __str__(self):
+        s = str(self.get_student()) + " " + self.get_assignment() + " " + str(self.get_grade()) + " " + str(self.get_turnIn())
+        return s
 
 class TestGrade(unittest.TestCase):
     def setUp(self):

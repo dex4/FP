@@ -5,16 +5,12 @@ from Controller.gradeController import *
 from Controller.studentController import *
 from Controller.statisticsController import *
 from Controller.undo import *
+from TextRepo.TextRepository import *
 from display import *
 import datetime
 
 class MainFrame:
-    def __init__(self):
-        self.sC = StudentController()
-        self.aC = AssignmentController()
-        self.gC = GradeController()
-        self.stats = Statistics(self.sC, self.aC, self.gC)
-        self.undo = Undo(self.sC, self.aC, self.gC)
+    def in_memory(self):
         g1 = Grade(12, "A1", 10, datetime.date(2017, 12, 1))
         g2 = Grade(12, "A2", 8, datetime.date(2017, 11, 2))
         g3 = Grade(13, "A1", 8, datetime.date(2017, 12, 23))
@@ -35,6 +31,21 @@ class MainFrame:
         self.aC.addA(a2)
         self.sC.assign_for_group("912", "A1")
         self.sC.assign_for_student(14, "A2")
+    def __init__(self):
+        self.sC = StudentController()
+        self.aC = AssignmentController()
+        self.gC = GradeController()
+        self.stats = Statistics(self.sC, self.aC, self.gC)
+        self.undo = Undo(self.sC, self.aC, self.gC)
+        print("What kind of repository you want to use?\n Type 'memory' for in memory.\n 'text' to save the data in a text file. \ 'bin' to use a binary repository.\n")
+        self.repoType = input()
+        if(self.repoType == "memory"):
+            self.in_memory()
+        elif(self.repoType == "text"):
+            TR = TextRepository(self.sC, self.aC, self.gC)
+            self.sC = TR.getStudents()
+            self.aC = TR.getAssignments()
+            self.gC = TR.getGrades()
     def workFrame(self, op):
         if(op == "1"):
             what = input("Type S to add a student or A to add an assignment.\n")
@@ -163,6 +174,10 @@ class MainFrame:
             self.undo.UndoFrame()
         elif(op == "redo"):
             self.undo.RedoFrame()
+        elif(op == "0"):
+            if(self.repoType == "text"):
+                TR.dumpData()
+                
 
 main = MainFrame()
 display = Display(main.sC, main.aC, main.gC)

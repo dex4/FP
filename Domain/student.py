@@ -31,6 +31,12 @@ class Student:
         if(aID in self._assignments):
             return True
         return False
+    def __str__(self):
+         s = str(self.getID()) + " " + self.getName() + " " + self.getGroup()
+         aLst = self.getAssignmentList()
+         for a in aLst:
+             s += " "+a
+         return s
 
 class TestStudent(unittest.TestCase):
     def setUp(self):

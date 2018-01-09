@@ -20,6 +20,9 @@ class Assignment:
         if(self._aID == a._aID and self._description == a._description and self._deadline == a._deadline):
             return True
         return False
+    def __str__(self):
+        s = self.getID() + " " + self.getDescription() + " " + str(self.get_deadline())
+        return s
 
 class TestAssignment(unittest.TestCase):
     def setUp(self):
