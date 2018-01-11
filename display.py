@@ -38,7 +38,6 @@ class Display:
     def getAddStudent(self):
         print("Give the student's details:")
         ID = input("ID: ")
-        print(self.sC.returnStudentList())
         try:
             int(ID)
         except ValueError:

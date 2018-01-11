@@ -4,6 +4,7 @@ from Domain.grade import *
 from Domain.assignment import *
 from Domain.student import *
 from Repositories.studentRepo import *
+from DataStructure.DataStruct import *
 import datetime
 import unittest
 
@@ -92,6 +93,7 @@ class GradeRepository:
             if(grade.get_student() == sID and grade.get_assignment() == aID):
                 return True
         return False
+    #SORT HERE
     def gradedAssignments(self, asgnList):
         lst = []
         for assignment in asgnList:
@@ -105,6 +107,7 @@ class GradeRepository:
                     lst[i] = lst[j]
                     lst[j] = aux
         return lst
+    #SORT HERE
     def students_by_average(self, studentRepo, aID):
         lst = []
         sRepo = studentRepo
@@ -161,6 +164,7 @@ class GradeRepository:
                 if((not self.isGraded(student.getID(), assignments[j])) and self.isLate(student)):
                     lateList.append((student, assignments[j]))
         return lateList
+    #SORT HERE
     def sort_students_by_grade(self, studentRepo):
         sRepo = studentRepo
         sList = sRepo.get_student_list()

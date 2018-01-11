@@ -38,17 +38,25 @@ class MainFrame:
         self.gC = GradeController()
         self.stats = Statistics(self.sC, self.aC, self.gC)
         self.undo = Undo(self.sC, self.aC, self.gC)
-        self.TR = TextRepository(self.sC, self.aC, self.gC)
-        self.BR = BinRepo(self.sC, self.aC, self.gC)
-        print("What kind of repository you want to use?\n Type 'memory' for in memory.\n 'text' to save the data in a text file. \ 'bin' to use a binary repository.\n")
-        self.repoType = input()
+        s = open("settings.properties", "r")
+        settings = []
+        i = 0
+        for line in s:
+            settings.append(line.split("="))
+            settings[i][1] = settings[i][1][0:len(settings[i][1])-1]
+            i+=1
+        self.repoType = settings[0][1]
         if(self.repoType == "memory"):
             self.in_memory()
         elif(self.repoType == "text"):
+            fList = [settings[1][1], settings[2][1], settings[3][1]]
+            self.TR = TextRepository(self.sC, self.aC, self.gC, fList)
             self.sC = self.TR.getStudents()
             self.aC = self.TR.getAssignments()
             self.gC = self.TR.getGrades()
         elif(self.repoType == "bin"):
+            fList = [settings[1][1], settings[2][1], settings[3][1]]
+            self.BR = BinRepo(self.sC, self.aC, self.gC, fList)
             self.sC = self.BR.loadStudents()
             self.aC = self.BR.loadAssignments()
             self.gC = self.BR.loadGrades()
