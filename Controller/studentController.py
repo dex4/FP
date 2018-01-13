@@ -36,3 +36,7 @@ class StudentController:
         return self._sRepo.students_with_assignment(aID)
     def findForValidation(self, sID):
         return self._sRepo.find_for_validation(sID)
+    def studentsSorted(self):
+        return self._sRepo.alphaSorted()
+    def filterForGroup(self, group):
+        return self._sRepo.filteredByGroup(group)

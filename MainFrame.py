@@ -193,6 +193,15 @@ class MainFrame:
                 self.TR.dumpData()
             elif(self.repoType == "bin"):
                 self.BR.dumpData(self.sC.returnStudentList(), self.aC.returnAssignmentList(), self.gC.returnGradeList())
+        elif(op == "sort"):
+            lst = self.stats.sortStudents()
+            for s in lst:
+                print(s.getID(), s.getName(), s.getGroup())
+        elif(op == "filter"):
+            grp = input("Group: ")
+            lst = self.sC.filterForGroup(grp)
+            for s in lst:
+                print(s.getID(), s.getName(), s.getGroup())
 
 
 main = MainFrame()

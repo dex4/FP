@@ -20,7 +20,7 @@ class Display:
 
     def getInput(self):
         op = input("Pick option: ")
-        if(op == "undo" or op == "redo"):
+        if(op == "undo" or op == "redo" or op == "sort" or op == "filter"):
             return op
         try:
             int(op)
@@ -90,7 +90,7 @@ class Display:
         print("Give the assignment's details:")
         ID = input("ID: ")
         try:
-            if(self.aC.findForValidation(ID) != Assignment("!", "!", "!")):
+            if(self.aC.findForValidation(ID) != None):
                 raise EntryException("Assignment ID already exists!")
         except EntryException as e:
             print(e)
@@ -136,7 +136,7 @@ class Display:
     def getRemoveAssignment(self):
         ID = input("Give the ID of the assignment you want removed: ")
         try:
-            if(self.aC.findForValidation(ID) == Assignment("!", "!", "!")):
+            if(self.aC.findForValidation(ID) == None):
                 raise EntryException("Assignment ID doesn't exist!")
         except EntryException as e:
             print(e)
@@ -147,7 +147,7 @@ class Display:
     def assignToStudent(self):
         aID = input("Assignment's ID: ")
         try:
-            if(self.aC.findForValidation(aID) == Assignment("!", "!", "!")):
+            if(self.aC.findForValidation(aID) == None):
                 raise EntryException("Assignment ID doesn't exist!")
         except EntryException as e:
             print(e)
@@ -194,7 +194,7 @@ class Display:
         sID = int(sID)
         aID = input("Assignment's ID: ")
         try:
-            if(self.aC.findForValidation(aID) == Assignment("!", "!", "!")):
+            if(self.aC.findForValidation(aID) == None):
                 raise EntryException("Assignment ID doesn't exist!")
         except EntryException as e:
             print(e)

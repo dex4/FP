@@ -1,40 +1,40 @@
 import sys
 sys.path.append('../')
 from Domain.assignment import *
-from Repositories.Exception import *
+from dataStruct.DataStruct import *
 import datetime
 import unittest
 
 class AssignmentRepo:
     def __init__(self):
-        self._aList = []
+        self._aList = DataStruct()
     def store(self, assignment):
         self._aList.append(assignment)
     def getAssignmentList(self):
-        return self._aList
+        return self._aList.getList()
     def getAssignment(self, aID):
-        for asgn in self._aList:
+        for asgn in self._aList.getList():
             if(asgn.getID() == aID):
                 return asgn
         return None
     def remove_assignment(self, aID):
-        aList = self._aList
+        aList = self._aList.getList()
         for i in range(0, len(aList)):
             if(aList[i].getID() == aID):
                 del self._aList[i]
                 break
     def update_assignment(self, aID, newDesc, newDln):
-        aList = self._aList
+        aList = self._aList.getList()
         for i in range(0, len(aList)):
             if(aList[i].getID() == aID):
                 self._aList[i]._description = newDesc
                 self._aList[i]._deadline = newDln
                 break
     def find_for_validation(self, aID):
-        for asgn in self._aList:
+        for asgn in self._aList.getList():
             if(asgn.getID() == aID):
                 return asgn
-        return Assignment("!", "!", "!")
+        return None
 
 class TestAssignmentRepo(unittest.TestCase):
     def setUp(self):

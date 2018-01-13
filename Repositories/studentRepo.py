@@ -1,7 +1,7 @@
 import sys
 sys.path.append("../")
 from Domain.student import *
-from Repositories.assignmentRepo import *
+from dataStruct.DataStruct import *
 import datetime
 import unittest
 
@@ -11,7 +11,7 @@ class StudentRepo:
         The groups list is for validation purposes when adding an assignment.
     """
     def __init__(self):
-        self._studentList = []
+        self._studentList = DataStruct()
         self._groups = []
         self._IDs = []
     def store(self, student):
@@ -20,42 +20,42 @@ class StudentRepo:
             self._groups.append(student._group)
         self._IDs.append(student._sID)
     def get_student_list(self):
-        return self._studentList
+        return self._studentList.getList()
     def get_groups_list(self):
         return self._groups
     def get_ID_list(self):
         return self._IDs
     def get_assignments(self, sID):
-        lst = self._studentList
+        lst = self._studentList.getList()
         for i in range(0, len(lst)):
             if(lst[i]._sID == sID):
                 return self._studentList[i].getAssignmentList()
     def remove_student(self, ID):
-        lst = self._studentList
+        lst = self._studentList.getList()
         for i in range(0, len(lst)):
             if(lst[i].getID() == ID):
                 del self._studentList[i]
                 del self._IDs[i]
                 break
     def assign_for_student(self, sID, aID):
-        lst = self._studentList
+        lst = self._studentList.getList()
         for i in range(0, len(lst)):
             if(lst[i].getID() == sID and lst[i].has_assignment(aID) == False):
                 self._studentList[i].addAssignment(aID)
                 break
     def assign_for_group(self, group, aID):
-        lst = self._studentList
+        lst = self._studentList.getList()
         for i in range(0, len(lst)):
             if(lst[i]._group == group and lst[i].has_assignment(aID) == False):
                 self.assign_for_student(lst[i]._sID, aID)
     def find_Student(self, ID):
-        lst = self._studentList
+        lst = self._studentList.getList()
         for i in range(0, len(lst)):
             if(lst[i].getID() == ID):
                 return lst[i]
         return None
     def update_Student(self, ID, newName, newGroup):
-        lst = self._studentList
+        lst = self._studentList.getList()
         for i in range(0, len(lst)):
             if(lst[i].getID() == ID):
                 self._studentList[i]._name = newName
@@ -78,18 +78,25 @@ class StudentRepo:
                         del self._studentList[i]._assignments[j]
                         break
     def students_with_assignment(self, aID):
-        lst = self._studentList
+        lst = self._studentList.getList()
         sLst = []
         for student in lst:
             if(aID in student.getAssignmentList()):
                 sLst.append(student)
         return sLst
     def find_for_validation(self, sID):
-        lst = self._studentList
+        lst = self._studentList.getList()
         for i in range(0, len(lst)):
             if(lst[i].getID() == sID):
                 return lst[i]
         return Student(1, "n", "n")
+    def alphaSorted(self):
+        lst = self.get_student_list()
+        lst = self._studentList.gnomeSort(lst, compareAlphaS)
+        return lst
+    def filteredByGroup(self, group):
+        newList = self._studentList.filterFunc(group, filterByGroup)
+        return newList
 class TestStudentRepo(unittest.TestCase):
     def setUp(self):
         self.sRepo = StudentRepo()

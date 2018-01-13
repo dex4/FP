@@ -17,6 +17,8 @@ class Assignment:
     def get_deadline(self):
         return self._deadline
     def __eq__(self, a):
+        if(a == None):
+            return False
         if(self._aID == a._aID and self._description == a._description and self._deadline == a._deadline):
             return True
         return False

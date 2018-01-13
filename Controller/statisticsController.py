@@ -20,3 +20,5 @@ class Statistics:
         return self.gController.returnGradeStatistic(self.sController.returnRepo())
     def assignmentsByAverage(self):
         return self.gController.returnAssignmentGradeStatistic(self.aController.getRepo())
+    def sortStudents(self):
+        return self.sController.studentsSorted()

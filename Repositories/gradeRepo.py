@@ -4,31 +4,31 @@ from Domain.grade import *
 from Domain.assignment import *
 from Domain.student import *
 from Repositories.studentRepo import *
-from DataStructure.DataStruct import *
+from dataStruct.DataStruct import *
 import datetime
 import unittest
 
 class GradeRepository:
     def __init__(self):
-        self._gList = []
+        self._gList = DataStruct()
     def store(self, grade):
         self._gList.append(grade)
     def get_grade_list(self):
-        return self._gList
+        return self._gList.getList()
     def get_specific_grade(self, sID, aID):
-        lst = self._gList
+        lst = self._gList.getList()
         for grade in lst:
             if(grade.get_student() == sID and grade.get_assignment() == aID):
                 return grade._grade
     def get_student_grades(self, sID):
-        lst = self._gList
+        lst = self._gList.getList()
         gL = []
         for grade in lst:
             if(grade.get_student() == sID):
                 gL.append(grade)
         return gL
     def get_assignment_grades(self, aID):
-        lst = self._gList
+        lst = self._gList.getList()
         gL = []
         for grade in lst:
             if(grade.get_assignment() == aID):
@@ -39,7 +39,7 @@ class GradeRepository:
         avg = 0
         nr = 0
         if(self.isStudent(sID)):
-            for grade in self._gList:
+            for grade in self._gList.getList():
                 if(grade.get_student() == sID):
                     total += grade.get_grade()
                     nr += 1
@@ -49,7 +49,7 @@ class GradeRepository:
         total = 0
         avg = 0
         nr = 0
-        for grade in self._gList:
+        for grade in self._gList.getList():
             if(grade.get_assignment() == aID):
                 total += grade.get_grade()
                 nr += 1
@@ -82,7 +82,7 @@ class GradeRepository:
                     del lst[i]
                     break
     def delete_specific_grade(self, sID, aID):
-        lst = self._gList
+        lst = self._gList.getList()
         for i in range(0, len(lst)):
             if(lst[i].get_student() == sID and lst[i].get_assignment() == aID):
                 del lst[i]
